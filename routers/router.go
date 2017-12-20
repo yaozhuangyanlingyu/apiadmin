@@ -26,8 +26,10 @@ func init() {
 	beego.Router("/admin/table", &controllers.AdminController{}, "*:Table")
 	// -- 管理员信息编辑
 	beego.Router("/admin/edit", &controllers.AdminController{}, "*:Edit")
-	// -- 管理员信息保存
-	beego.Router("/admin/save", &controllers.AdminController{}, "*:AjaxSave")
+	beego.Router("/admin/add", &controllers.AdminController{}, "*:Add")
+	// -- 管理员信息添加和保存
+	beego.Router("/admin/ajax_save", &controllers.AdminController{}, "*:AjaxSave")
+	beego.Router("/admin/ajax_add", &controllers.AdminController{}, "*:AjaxAdd")
 
 	// - 系统首页
 	beego.Router("/home/index", &controllers.HomeController{}, "*:Index")

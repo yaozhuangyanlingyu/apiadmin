@@ -3,11 +3,13 @@ package controllers
 import (
 	"crypto/md5"
 	"encoding/hex"
-	"strconv"
 	"strings"
 	"time"
 
+	"github.com/apiadmin/libs"
+	"github.com/apiadmin/models"
 	"github.com/apiadmin/modules/apiadmin"
+	"github.com/apiadmin/modules/dataformat"
 	"github.com/astaxie/beego"
 )
 
@@ -65,25 +67,27 @@ func (this *AdminController) Edit() {
 	if err != nil {
 		this.AjaxMsg(err.Error(), MSG_ERR)
 	}
-	list := make([]map[string]interface{}, len(result))
-	for k, v := range result {
-		row := make(map[string]interface{})
-		row["checked"] = 0
-		for i := 0; i < len(roleIds); i++ {
-			roleId, _ := strconv.ParseInt(roleIds[i], 10, 64)
-
-			if roleId == v.Id {
-				row["checked"] = 1
-			}
-		}
-		row["Id"] = v.Id
-		row["RoleName"] = v.RoleName
-		list[k] = row
-	}
+	role := dataformat.GetRoleListFormat(result, roleIds)
 
 	// 展示模板
 	this.Data["admin"] = userInfo
-	this.Data["role"] = list
+	this.Data["role"] = role
+	this.Data["default_passwd"] = beego.AppConfig.String("site.default_passwd")
+	this.Display()
+}
+
+// 添加管理员页面
+func (this *AdminController) Add() {
+	// 角色数据
+	result, _, err := apiadmin.GetRoleList()
+	if err != nil {
+		this.AjaxMsg(err.Error(), MSG_ERR)
+	}
+	var roleIds []string
+	role := dataformat.GetRoleListFormat(result, roleIds)
+
+	// 默认密码
+	this.Data["role"] = role
 	this.Data["default_passwd"] = beego.AppConfig.String("site.default_passwd")
 	this.Display()
 }
@@ -132,5 +136,50 @@ func (this *AdminController) AjaxSave() {
 	}
 
 	// 返回提示信息
+	this.AjaxMsg("操作成功", MSG_OK)
+}
+
+// 增加管理员信息
+func (this *AdminController) AjaxAdd() {
+	// 初始化参数
+	admin := new(models.Admin)
+	admin.LoginName = strings.TrimSpace(this.GetString("login_name"))
+	admin.RealName = strings.TrimSpace(this.GetString("real_name"))
+	admin.Phone = strings.TrimSpace(this.GetString("phone"))
+	admin.Email = strings.TrimSpace(this.GetString("email"))
+	admin.RoleIds = strings.TrimSpace(this.GetString("roleids"))
+
+	// 参数验证
+	if len(admin.LoginName) == 0 {
+		this.AjaxMsg("登陆账号不能为空", MSG_ERR)
+	}
+	if len(admin.RealName) == 0 {
+		this.AjaxMsg("真实姓名不能为空", MSG_ERR)
+	}
+	if len(admin.Phone) == 0 {
+		this.AjaxMsg("手机号码不能为空", MSG_ERR)
+	}
+	if len(admin.Email) == 0 {
+		this.AjaxMsg("电子邮箱不能为空", MSG_ERR)
+	}
+
+	// 检查用户名是否已经存在
+	_, err := apiadmin.GetUserInfoByName(admin.LoginName)
+	if err == nil {
+		this.AjaxMsg("登陆名已经存在", MSG_ERR)
+	}
+
+	// 增加用户
+	pwd, salt := libs.GetPasswdString("")
+	admin.Password = pwd
+	admin.UpdateId = this.UserId
+	admin.CreateId = this.UserId
+	admin.Status = 1
+	admin.Salt = salt
+	admin.CreateTime = time.Now().Unix()
+	admin.UpdateTime = time.Now().Unix()
+	if _, err := apiadmin.AdminCreate(admin); err != nil {
+		this.AjaxMsg("管理员新增失败", MSG_ERR)
+	}
 	this.AjaxMsg("操作成功", MSG_OK)
 }

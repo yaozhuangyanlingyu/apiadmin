@@ -5,6 +5,7 @@ import (
 
 	"github.com/apiadmin/modules/apiadmin"
 	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/logs"
 )
 
 type LoginController struct {
@@ -37,6 +38,9 @@ func (this *LoginController) LoginIn() {
 		if err != nil {
 			flash.Error(err.Error())
 		}
+
+		// 记录日志
+		logs.Trace("登陆成功，用户名：" + username)
 
 		// 跳转处理
 		this.Redirect(beego.URLFor("HomeController.Index"), 302)

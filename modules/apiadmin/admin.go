@@ -37,6 +37,28 @@ func GetAdminList(page, pageSize int, filters map[string]interface{}) (list []*m
 }
 
 /**
+ * 根据用户名获取用户数据
+ * @param page  int 	// 分页页数
+ * @param limit int		// 分页大小
+ * return []*admin
+ */
+func GetUserInfoByName(username string) (*models.Admin, error) {
+	adminObj := models.Admin{}
+	return adminObj.AdminGetByName(username)
+}
+
+/**
+ * 根据用户名获取用户数据
+ * @param page  int 	// 分页页数
+ * @param limit int		// 分页大小
+ * return []*admin
+ */
+func AdminCreate(a *models.Admin) (int64, error) {
+	adminObj := models.Admin{}
+	return adminObj.AdminCreate(a)
+}
+
+/**
  * 管理员登录处理
  * @param username string // 用户名
  * @param password string // 登录密码
@@ -64,6 +86,7 @@ func Login(req *beego.Controller, username, password string) (err error) {
 	// 记录登录信息
 	lastIp := strings.Split(req.Ctx.Request.RemoteAddr, ":")
 	userInfo.LastIp = lastIp[0]
+	userInfo.LastLogin = time.Now().Unix()
 	userInfo.UpdateTime = time.Now().Unix()
 	userInfo.Update()
 

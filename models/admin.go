@@ -98,3 +98,11 @@ func (this *Admin) AdminGetList(page, pageSize int, filters map[string]interface
 
 	return list, count, nil
 }
+
+/**
+ * 新增数据
+ * @param userId int
+ */
+func (this *Admin) AdminCreate(a *Admin) (int64, error) {
+	return orm.NewOrm().Insert(a)
+}
