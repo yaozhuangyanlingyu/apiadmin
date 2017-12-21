@@ -30,9 +30,12 @@ func init() {
 	// -- 管理员信息添加和保存
 	beego.Router("/admin/ajax_save", &controllers.AdminController{}, "*:AjaxSave")
 	beego.Router("/admin/ajax_add", &controllers.AdminController{}, "*:AjaxAdd")
+	// -- 删除管理员
+	beego.Router("/admin/ajax_del", &controllers.AdminController{}, "*:AjaxDel")
 
 	// - 系统首页
 	beego.Router("/home/index", &controllers.HomeController{}, "*:Index")
+	beego.Router("/", &controllers.HomeController{}, "*:Index")
 
 	// - 控制面板
 	beego.Router("/home/start", &controllers.HomeController{}, "*:Start")

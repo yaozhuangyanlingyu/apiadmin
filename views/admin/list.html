@@ -55,8 +55,8 @@
 	               layer.msg('超级管理员不允许删除');
 	               return false;
 	            }
-	            layer.confirm('真的删除【'+data.login_name+'】账号么', function(index){
-	            var jsData = {'id':data.id}
+	            layer.confirm('真的删除【'+data.LoginName+'】账号么', function(index){
+	            var jsData = {'id':data.Id}
 	            $.post('{{urlfor "AdminController.AjaxDel"}}', jsData, function (out) {
 	                if (out.status == 0) {
 	                    layer.alert('删除成功了', {icon: 1},function(index){

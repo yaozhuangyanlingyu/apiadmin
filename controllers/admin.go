@@ -38,6 +38,7 @@ func (this *AdminController) Table() {
 
 	// 查询数据
 	filters := make(map[string]interface{})
+	filters["status"] = 1
 	adminList, count, err := apiadmin.GetAdminList(page, limit, filters)
 	if err != nil {
 		this.AjaxMsg(err.Error(), MSG_ERR)
@@ -181,5 +182,31 @@ func (this *AdminController) AjaxAdd() {
 	if _, err := apiadmin.AdminCreate(admin); err != nil {
 		this.AjaxMsg("管理员新增失败", MSG_ERR)
 	}
+	this.AjaxMsg("操作成功", MSG_OK)
+}
+
+// 删除管理员
+func (this *AdminController) AjaxDel() {
+	// 获取参数
+	adminId, err := this.GetInt("id")
+	if err != nil {
+		this.AjaxMsg("id参数不正确", MSG_ERR)
+	}
+
+	// 修改数据
+	adminInfo, err := apiadmin.GetUserInfoById(adminId)
+	if err != nil {
+		this.AjaxMsg(err.Error(), MSG_ERR)
+	}
+	adminInfo.Id = adminId
+	adminInfo.Status = 0
+	adminInfo.UpdateTime = time.Now().Unix()
+	if adminId == 1 {
+		this.AjaxMsg("不能删除管理员", MSG_ERR)
+	}
+	if err = adminInfo.Update(); err != nil {
+		this.AjaxMsg(err.Error(), MSG_ERR)
+	}
+
 	this.AjaxMsg("操作成功", MSG_OK)
 }

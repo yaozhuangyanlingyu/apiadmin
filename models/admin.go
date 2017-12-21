@@ -81,7 +81,7 @@ func (this *Admin) AdminGetList(page, pageSize int, filters map[string]interface
 
 	// 参数过滤
 	for field, fieldValue := range filters {
-		query.Filter(field, fieldValue)
+		query = query.Filter(field, fieldValue)
 	}
 
 	// 数据条数
