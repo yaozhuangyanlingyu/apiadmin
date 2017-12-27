@@ -1,0 +1,13 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "FBJa31/bsP+Wgdi55D7AjKrL4OI=",
+			"path": "github.com/go-xorm/xorm",
+			"revision": "3480244cd27f8a3ca33e51e798346fa4064f25e2",
+			"revisionTime": "2017-12-20T08:08:10Z"
+		}
+	],
+	"rootPath": "github.com/apiadmin"
+}
