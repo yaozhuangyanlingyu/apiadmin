@@ -64,7 +64,7 @@ func (this *AdminController) Edit() {
 
 	// 查询角色
 	roleIds := strings.Split(userInfo.RoleIds, ",")
-	result, _, err := apiadmin.GetRoleList()
+	result, _, err := apiadmin.GetRoleList(1, 1000)
 	if err != nil {
 		this.AjaxMsg(err.Error(), MSG_ERR)
 	}
@@ -80,7 +80,7 @@ func (this *AdminController) Edit() {
 // 添加管理员页面
 func (this *AdminController) Add() {
 	// 角色数据
-	result, _, err := apiadmin.GetRoleList()
+	result, _, err := apiadmin.GetRoleList(1, 1000)
 	if err != nil {
 		this.AjaxMsg(err.Error(), MSG_ERR)
 	}

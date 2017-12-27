@@ -37,6 +37,11 @@ func init() {
 	beego.Router("/home/index", &controllers.HomeController{}, "*:Index")
 	beego.Router("/", &controllers.HomeController{}, "*:Index")
 
+	// 角色管理
+	beego.AutoRouter(&controllers.RoleController{})
+	// 权限列表
+	beego.AutoRouter(&controllers.AuthController{})
+
 	// - 控制面板
 	beego.Router("/home/start", &controllers.HomeController{}, "*:Start")
 }

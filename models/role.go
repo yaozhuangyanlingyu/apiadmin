@@ -52,3 +52,17 @@ func (this *Role) RoleGetList(page, pageSize int, filters map[string]interface{}
 	}
 	return role, count, nil
 }
+
+/**
+ * 按照id获取角色信息
+ * @param id int 	// 角色表主键ID
+ * @return Role
+ */
+func (this *Role) RoleGetInfo(id int) (*Role, error) {
+	role := new(Role)
+	err := orm.NewOrm().QueryTable(this.TableName()).One(role)
+	if err != nil {
+		return role, err
+	}
+	return role, nil
+}
